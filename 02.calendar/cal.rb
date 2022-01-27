@@ -4,15 +4,20 @@
 require 'date'
 require 'optparse'
 
+# 年月デフォルト値
+today = Date.today
+year = today.year
+month = today.month
+
+# 引数による年月指定
 options = ARGV.getopts('y:m:')
-year = options['y'].to_i
-month = options['m'].to_i
+year = options['y'].to_i if options['y']
+month = options['m'].to_i if options['m']
 
-puts year
-
-base_date = Date.new(year, month, 1)     # 基準にするDateオブジェクト
-last_day = Date.new(year, month, -1).day # 末日
-first_wday = base_date.wday              # 1日の曜日
+# 1日の曜日
+first_wday = Date.new(year, month, 1).wday
+# 末日
+last_day = Date.new(year, month, -1).day
 
 # ヘッダ出力
 puts "     #{month}月 #{year}"
@@ -25,5 +30,6 @@ end
 (1..last_day).each do |day|
   print ' ' if day < 10
   print "#{day} "
+  # 土曜日なら改行
   puts '' if Date.new(year, month, day).saturday?
 end
