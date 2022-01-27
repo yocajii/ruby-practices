@@ -5,12 +5,11 @@ require 'date'
 require 'optparse'
 
 def print_calendar(year, month, current_day)
-  # 1日の曜日
-  first_wday = Date.new(year, month, 1).wday
-  # 末日
-  last_day = Date.new(year, month, -1).day
+  print_header(year, month)
+  print_body(year, month, current_day)
+end
 
-  # ヘッダ出力
+def print_header(year, month)
   month_string = if month < 10
                    # 月が1桁なら右揃え
                    " #{month}"
@@ -19,6 +18,13 @@ def print_calendar(year, month, current_day)
                  end
   puts "      #{month_string}月 #{year}"
   puts '日 月 火 水 木 金 土'
+end
+
+def print_body(year, month, current_day)
+  # 1日の曜日
+  first_wday = Date.new(year, month, 1).wday
+  # 末日
+  last_day = Date.new(year, month, -1).day
 
   # 日付の開始位置調整
   first_wday.times do
@@ -60,7 +66,7 @@ month = if options['m']
         else
           today_month
         end
-
-# 当年当月なら当日を渡す
+# 当年当月なら当日を設定
 current_day = (today.day if year == today_year && month == today_month)
+
 print_calendar(year, month, current_day)
