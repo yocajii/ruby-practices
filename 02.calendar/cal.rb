@@ -5,31 +5,18 @@ require 'date'
 require 'optparse'
 
 def print_calendar(year, month, current_day)
-  print_header(year, month)
-  print_body(year, month, current_day)
-end
-
-def print_header(year, month)
+  # 年月・曜日を出力
   puts "      #{month.to_s.rjust(2)}月 #{year}"
   puts '日 月 火 水 木 金 土'
-end
-
-def print_body(year, month, current_day)
-  # 1日の曜日
-  first_wday = Date.new(year, month, 1).wday
+  # 日付の開始位置調整
+  Date.new(year, month, 1).wday.times { print '   ' }
   # 末日
   last_day = Date.new(year, month, -1).day
-
-  # 日付の開始位置調整
-  first_wday.times do
-    print '   '
-  end
-
   # 日付出力
   (1..last_day).each do |day|
     # 日付を2桁に揃える
     day_string = day.to_s.rjust(2)
-    if current_day && current_day == day
+    if current_day == day
       # 当日なら表示色反転して出力
       print "\e[7m#{day_string}\e[0m "
     else
