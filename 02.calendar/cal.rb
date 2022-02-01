@@ -10,13 +10,7 @@ def print_calendar(year, month, current_day)
 end
 
 def print_header(year, month)
-  month_string = if month < 10
-                   # 月が1桁なら右揃え
-                   " #{month}"
-                 else
-                   month.to_s
-                 end
-  puts "      #{month_string}月 #{year}"
+  puts "      #{month.to_s.rjust(2)}月 #{year}"
   puts '日 月 火 水 木 金 土'
 end
 
@@ -33,10 +27,8 @@ def print_body(year, month, current_day)
 
   # 日付出力
   (1..last_day).each do |day|
-    day_string = ''
-    # 日付が1桁なら右揃え
-    day_string += ' ' if day < 10
-    day_string += day.to_s
+    # 日付を2桁に揃える
+    day_string = day.to_s.rjust(2)
     if current_day && current_day == day
       # 当日なら表示色反転して出力
       print "\e[7m#{day_string}\e[0m "
