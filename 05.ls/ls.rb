@@ -50,7 +50,7 @@ end
 target = ARGV[0]
 if target && File.file?(target)
   # 引数がファイルの時
-  print target
+  puts target
 elsif target && File.directory?(target)
   # 引数がディレクトリの時
   ls(cols, span, target)
