@@ -31,22 +31,24 @@ frames[-2].push frames.pop[0] if frames[-1].size == 1
 point = 0
 # 最後のフレーム以外の得点計算
 9.times do |i|
+  point += frames[i].sum
+  # ボーナス得点
   point += if frames[i][0] == 10 # strike
              # 次フレームもストライクの時
              if frames[i + 1][0] == 10
                if i < 8 # 8フレーム目までの時
-                 frames[i].sum + frames[i + 1][0] + frames[i + 2][0]
+                 frames[i + 1][0] + frames[i + 2][0]
                else # 9フレーム目の時
-                 frames[i].sum + frames[i + 1][0] + frames[i + 1][1]
+                 frames[i + 1][0] + frames[i + 1][1]
                end
                # 次フレームはストライクではないとき
              else
-               frames[i].sum + frames[i + 1][0] + frames[i + 1][1]
+               frames[i + 1][0] + frames[i + 1][1]
              end
            elsif frames[i].sum == 10 # spare
-             frames[i].sum + frames[i + 1][0]
+             frames[i + 1][0]
            else
-             frames[i].sum
+             0
            end
 end
 # 最後のフレームは単純に加算
