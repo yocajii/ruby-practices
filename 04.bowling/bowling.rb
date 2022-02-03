@@ -3,30 +3,26 @@
 
 # 引数を取得
 score = ARGV[0]
-
 scores = score.split(',')
-shots = []
-while scores.any?
-  shot = scores.shift
-  if shot == 'X' && shots.size < 18
-    # 9フレーム目までのストライク
-    shots << 10
-    shots << 0
-  elsif shot == 'X'
-    # 10フレーム目のストライク
-    shots << 10
+
+shots = scores.flat_map do |shot|
+  if shot == 'X'
+    [10, 0]
   else
-    shots << shot.to_i
+    shot.to_i
   end
 end
 
-# フレームに分ける
-frames = []
-shots.each_slice(2) do |s|
-  frames << s
+# 10フレーム目にストライクがあれば余計な0を除去
+last_frame = shots[18..23].each_slice(2).to_a.flat_map do |item|
+  if item[0] == 10 && (item[1]).zero?
+    item[0]
+  else
+    item
+  end
 end
-# 最終フレームが3投ならフレームを結合する
-frames[-2].push frames.pop[0] if frames[-1].size == 1
+# フレーム単位にして結合
+frames = shots[0..17].each_slice(2).to_a.concat([last_frame])
 
 point = 0
 # 最後のフレーム以外の得点計算
