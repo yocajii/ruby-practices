@@ -3,13 +3,6 @@
 
 # 引数を取得
 score = ARGV[0]
-# score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
-# score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X'
-# score = '0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4'
-# score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0'
-# score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,1,8'
-# score = 'X,X,X,X,X,X,X,X,X,X,X,X'
-# p "score #{score}"
 
 scores = score.split(',')
 shots = []
@@ -26,7 +19,6 @@ while scores.any?
     shots << shot.to_i
   end
 end
-# p "shots #{shots}"
 
 # フレームに分ける
 frames = []
@@ -35,7 +27,6 @@ shots.each_slice(2) do |s|
 end
 # 最終フレームが3投ならフレームを結合する
 frames[-2].push frames.pop[0] if frames[-1].size == 1
-# p "frames #{frames}"
 
 point = 0
 # 最後のフレーム以外の得点計算
@@ -48,7 +39,7 @@ point = 0
                else # 9フレーム目の時
                  frames[i].sum + frames[i + 1][0] + frames[i + 1][1]
                end
-             # 次フレームはストライクではないとき
+               # 次フレームはストライクではないとき
              else
                frames[i].sum + frames[i + 1][0] + frames[i + 1][1]
              end
@@ -57,7 +48,6 @@ point = 0
            else
              frames[i].sum
            end
-  # p "point #{point}"
 end
 # 最後のフレームは単純に加算
 point += frames[9].sum
