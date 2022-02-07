@@ -7,11 +7,13 @@ class Ls
   COLS = 3 # 列数
   SPAN = 2 # 列間のスペース数
 
-  def main(dir, options)
+  def show(target, options)
+    return puts target if target && File.file?(target)
+
     items = if options[:a]
-              list_items(dir)
+              list_items(target)
             else
-              list_items(dir).delete_if { |item| item.start_with?('.') }
+              list_items(target).delete_if { |item| item.start_with?('.') }
             end
     return if items.size.zero?
 
@@ -50,8 +52,4 @@ opt.on('-a') { |v| options[:a] = v }
 target = opt.parse(ARGV)[0] # ファイル/ディレクトリ指定2つ目以降は無視
 
 ls = Ls.new
-if target && File.file?(target)
-  puts target
-else
-  ls.main(target || '.', options)
-end
+ls.show(target || '.', options)
