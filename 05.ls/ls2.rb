@@ -23,7 +23,7 @@ class Ls
 
   def list_items(dir)
     Dir.chdir(dir)
-    Dir.entries('.').sort
+    Dir.entries('.').sort_by { |v| v.match('^[.]?(.*$)')[1] }
   end
 
   def generate_table(items)
