@@ -14,6 +14,7 @@ class Ls
     end
     items = list_items(target)
     items = items.delete_if { |item| item.start_with?('.') } unless options[:a]
+    items = items.reverse if options[:r]
     return if items.size.zero?
 
     vertical_table = generate_table(items)
@@ -48,6 +49,7 @@ end
 options = {}
 opt = OptionParser.new
 opt.on('-a') { |v| options[:a] = v }
+opt.on('-r') { |v| options[:r] = v }
 target = opt.parse(ARGV)[0] # ファイル/ディレクトリ指定2つ目以降は無視
 
 ls = Ls.new
