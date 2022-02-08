@@ -8,13 +8,12 @@ class Ls
   SPAN = 2 # 列間のスペース数
 
   def show(target, options)
-    return puts target if target && File.file?(target)
-
-    items = if options[:a]
-              list_items(target)
-            else
-              list_items(target).delete_if { |item| item.start_with?('.') }
-            end
+    if target && File.file?(target)
+      puts target
+      return
+    end
+    items = list_items(target)
+    items = items.delete_if { |item| item.start_with?('.') } unless options[:a]
     return if items.size.zero?
 
     vertical_table = generate_table(items)
