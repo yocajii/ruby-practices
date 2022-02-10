@@ -14,6 +14,7 @@ class Ls
     end
     items = list_items(target)
     items = items.delete_if { |item| item.start_with?('.') } unless options[:a]
+    items = items.reverse if options[:r]
     return if items.size.zero?
 
     vertical_table = generate_table(items)
@@ -31,8 +32,8 @@ class Ls
     rows = (items.size.to_f / COLS).ceil
     horizontal_table = items.each_slice(rows).to_a
     aligned_horizontal_table = horizontal_table.map do |col_data|
-      width = col_data.map(&:size).max + SPAN
-      col_data.map { |item| item.ljust(width) }
+      width = col_data.map { |item| digit_size(item) }.max + SPAN
+      col_data.map { |item| digit_ljust(width, item) }
     end
     aligned_horizontal_table.map { |item| item.values_at(0...rows) }.transpose
   end
@@ -43,11 +44,22 @@ class Ls
       print "\n"
     end
   end
+
+  # 以下は全角文字に対応するためのメソッド
+  def digit_size(text)
+    text.each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.inject(:+)
+  end
+
+  def digit_ljust(width, text)
+    padding = ' ' * (width - digit_size(text))
+    text + padding
+  end
 end
 
 options = {}
 opt = OptionParser.new
 opt.on('-a') { |v| options[:a] = v }
+opt.on('-r') { |v| options[:r] = v }
 target = opt.parse(ARGV)[0] # ファイル/ディレクトリ指定2つ目以降は無視
 
 ls = Ls.new
