@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module LsShort
-
   COLS = 3 # 列数
   SPAN = 2 # 列間のスペース数
 
@@ -31,5 +30,4 @@ module LsShort
     padding = ' ' * (width - digit_size(text))
     text + padding
   end
-
 end

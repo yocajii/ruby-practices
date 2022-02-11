@@ -4,7 +4,6 @@ require 'etc'
 require 'date'
 
 module LsLong
-
   def show_long_data(items)
     lstats = items.map { |v| { item: v, lstat: File.lstat(v) } }
     long_data = generate_long_data(lstats)
