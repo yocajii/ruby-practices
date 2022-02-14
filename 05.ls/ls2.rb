@@ -9,10 +9,6 @@ class Ls
   include LsShort
   include LsLong
 
-  def self.show(target, options)
-    new.show(target, options)
-  end
-
   def show(target, options)
     items = list_items(target)
     items = items.delete_if { |item| item.start_with?('.') } unless options[:a]
@@ -45,4 +41,4 @@ opt.on('-l') { |v| options[:l] = v }
 opt.on('-r') { |v| options[:r] = v }
 target = opt.parse(ARGV)[0] # ファイル/ディレクトリ指定2つ目以降は無視
 
-Ls.show(target || '.', options)
+Ls.new.show(target || '.', options)

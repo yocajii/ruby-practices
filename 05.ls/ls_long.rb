@@ -4,18 +4,21 @@ require 'etc'
 require 'date'
 
 module LsLong
+  BLOCK_SIZE = 1024 # 1ブロックのサイズ
+  SP_BITS_RANGE = (0..2).freeze # ファイルモードビットのうちスペシャルビットの範囲
+  RWX_BITS_RANGE = (3..11).freeze # ファイルモードビットのうちパーミッションを表す範囲
+
   def show_long_data(items)
     lstats = items.map { |v| { item: v, lstat: File.lstat(v) } }
     long_data = generate_long_data(lstats)
     table = align_long_table(long_data[:table])
     puts "total #{long_data[:blocks]}"
-    print_long_table(table)
+    table.each { |row| puts row.join(' ') }
   end
 
   def generate_long_data(lstats)
-    table = []
     blocks = 0
-    lstats.map do |v|
+    table = lstats.map do |v|
       ftype = v[:lstat].ftype
       mode_bits = v[:lstat].mode.to_s(2)[-12, 12] # 後ろの12文字
       ftype_mode = parse_ftype(ftype) + parse_mode(mode_bits)
@@ -25,8 +28,8 @@ module LsLong
       size = v[:lstat].size
       mtime = parse_mtime(v[:lstat].mtime)
       item = add_symlink(v[:item])
-      table.push([ftype_mode, nlink, user, group, size, mtime, item])
-      blocks += (v[:lstat].size / 1024).truncate
+      blocks += (v[:lstat].size / BLOCK_SIZE).truncate
+      [ftype_mode, nlink, user, group, size, mtime, item]
     end
     { table: table, blocks: blocks }
   end
@@ -38,13 +41,6 @@ module LsLong
       col_data.map { |v| v.is_a?(Integer) ? v.to_s.rjust(width) : v.ljust(width) }
     end
     aligned_cols_data.concat([cols_data.last]).transpose
-  end
-
-  def print_long_table(table)
-    table.each do |row_data|
-      row_data.map { |v| print "#{v} " }
-      print "\n"
-    end
   end
 
   def parse_ftype(ftype)
@@ -64,9 +60,9 @@ module LsLong
   def parse_mode(mode_bits)
     symbols = [%w[- r], %w[- w]]
     mode_bits_array = mode_bits.chars.map(&:to_i)
-    special_bits = mode_bits_array[0..2]
-    read_write_bits = mode_bits_array[3..11].each_slice(3).map { |v| v[0..1] }
-    execute_bits = mode_bits_array[3..11].each_slice(3).map(&:last)
+    special_bits = mode_bits_array[SP_BITS_RANGE]
+    read_write_bits = mode_bits_array[RWX_BITS_RANGE].each_slice(3).map { |v| v[0..1] }
+    execute_bits = mode_bits_array[RWX_BITS_RANGE].each_slice(3).map(&:last)
     read_write_symbols = read_write_bits.map do |bits|
       bits.map.with_index { |v, i| symbols[i][v.to_i] }.join
     end

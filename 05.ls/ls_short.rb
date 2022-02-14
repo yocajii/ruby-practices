@@ -12,14 +12,7 @@ module LsShort
       col_data.map { |item| digit_ljust(width, item) }
     end
     vertical_table = aligned_horizontal_table.map { |item| item.values_at(0...rows) }.transpose
-    print_short_table(vertical_table)
-  end
-
-  def print_short_table(table)
-    table.each do |row_data|
-      row_data.compact.each { |item| print item }
-      print "\n"
-    end
+    vertical_table.each { |row| puts row.compact.join }
   end
 
   def digit_size(text)
