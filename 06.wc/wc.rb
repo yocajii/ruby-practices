@@ -6,18 +6,13 @@ require 'optparse'
 SOLID_WIDTH = 7
 
 def fetch_files(targets)
-  files = []
   if targets.empty?
-    data = ARGF.gets('')
-    files.push({ data: data })
+    [data: ARGF.gets('')]
   else
-    targets.length.times do
-      data = ARGF.readline(nil)
-      name = ARGF.filename
-      files.push({ name: name, data: data })
+    targets.map do |filename|
+      { name: filename, data: File.read(filename) }
     end
   end
-  files
 end
 
 def count(files)
@@ -29,9 +24,7 @@ def count(files)
     { name: name, lines: lines, words: words, bytes: bytes }
   end
   if results.length > 1
-    lines = results.reduce(0) { |total, result| total + result[:lines] }
-    words = results.reduce(0) { |total, result| total + result[:words] }
-    bytes = results.reduce(0) { |total, result| total + result[:bytes] }
+    lines, words, bytes = %i[lines words bytes].map { |key| results.sum { |result| result[key] } }
     results.push({ name: 'total', lines: lines, words: words, bytes: bytes })
   end
   results
@@ -48,16 +41,11 @@ def calc_width(results, lines_only)
 end
 
 def show(results, lines_only, width)
-  results.each do |v|
-    lines = v[:lines].to_s.rjust(width)
-    words = v[:words].to_s.rjust(width)
-    bytes = v[:bytes].to_s.rjust(width)
-    name = v[:name]
-    if lines_only
-      puts "#{lines} #{name}"
-    else
-      puts "#{lines} #{words} #{bytes} #{name}"
-    end
+  results.each do |result|
+    lines, words, bytes = %i[lines words bytes].map { |key| result[key].to_s.rjust(width) }
+    print "#{lines} "
+    print "#{words} #{bytes} " unless lines_only
+    puts result[:name]
   end
 end
 
@@ -65,7 +53,6 @@ options = {}
 opt = OptionParser.new
 opt.on('-l') { |v| options[:l] = v }
 targets = opt.parse!(ARGV)
-
 files = fetch_files(targets)
 results = count(files)
 width = calc_width(results, options[:l])
