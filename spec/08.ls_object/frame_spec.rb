@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../08.ls_object/game'
 require_relative '../../08.ls_object/frame'
 
 RSpec.describe Frame do
