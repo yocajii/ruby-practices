@@ -4,17 +4,25 @@ require_relative '../../08.ls_object/game'
 require_relative '../../08.ls_object/frame'
 
 RSpec.describe Frame do
-  let(:basic) { build :frame, shots: [2, 3] }
-  let(:spare) { build :frame, shots: [4, 6] }
-  let(:strike) { build :frame, shots: [10] }
+  describe '#point' do
+    example 'ボーナスポイント無しの時に素点が返ること' do
+      frame = Frame.new([5, 0], [1, 2], [3, 4])
+      expect(frame.point).to eq 5
+    end
 
-  example 'スペアの判定' do
-    expect(basic.spare?).to be false
-    expect(spare.spare?).to be true
-  end
+    example 'スペアの時にボーナスポイントを加算した点が返ること' do
+      frame = Frame.new([5, 5], [1, 2], [3, 4])
+      expect(frame.point).to eq 11
+    end
 
-  example 'ストライクの判定' do
-    expect(basic.strike?).to be false
-    expect(strike.strike?).to be true
+    example 'ストライクの時にボーナスポイントを加算した点が返ること' do
+      frame = Frame.new([10], [1, 2], [3, 4])
+      expect(frame.point).to eq 13
+    end
+
+    example 'ストライクのフレームが連続した時にボーナスポイントを加算した点が返ること' do
+      frame = Frame.new([10], [10], [3, 4])
+      expect(frame.point).to eq 23
+    end
   end
 end
