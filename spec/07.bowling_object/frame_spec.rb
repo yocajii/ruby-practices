@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../08.ls_object/frame'
+require_relative '../../07.bowling_object/frame'
 
 RSpec.describe Frame do
   describe '#point' do
