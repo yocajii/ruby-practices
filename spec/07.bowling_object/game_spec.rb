@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../08.ls_object/game'
+require_relative '../../07.bowling_object/game'
 
 RSpec.describe Game do
   describe '#point' do
