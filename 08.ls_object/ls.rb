@@ -14,11 +14,11 @@ class Ls
 
   def show
     if @options[:l]
-      puts LongFormat.new(@items).text
+      LongFormat.new(@items).text
     else
       return if @items.size.zero?
 
-      puts ShortFormat.new(@items).text
+      ShortFormat.new(@items).text
     end
   end
 
@@ -58,4 +58,4 @@ opt.on('-l') { |v| options[:l] = v }
 opt.on('-r') { |v| options[:r] = v }
 target = opt.parse(ARGV)[0] || '.'
 
-Ls.new(target, options).show
+puts Ls.new(target, options).show

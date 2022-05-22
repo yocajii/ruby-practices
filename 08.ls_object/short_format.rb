@@ -11,7 +11,7 @@ class ShortFormat
   def text
     rows = (@items.size.to_f / COLS).ceil
     table = create_table(rows)
-    table.map(&:join).join("\n")
+    table.map { |row| row.join.strip }.join("\n")
   end
 
   private

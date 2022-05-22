@@ -8,10 +8,10 @@ class LongFormat
   def text
     text = ''
     text += "total #{sum_blocks}\n"
-    return if @items.size.zero?
-
-    table = create_table
-    text += table.map { |row| row.join(' ') }.join("\n")
+    if @items.size.positive?
+      table = create_table
+      text += table.map { |row| row.join(' ') }.join("\n")
+    end
     text
   end
 

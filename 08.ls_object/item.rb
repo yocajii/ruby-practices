@@ -18,7 +18,7 @@ class Item
   SP_BITS_RANGE = (0..2).freeze # MODE_BITS_LENGTHのうちスペシャルビットを表す範囲
   RWX_BITS_RANGE = (3..11).freeze # MODE_BITS_LENGTHのうちパーミッションを表す範囲
   MODE_SYMBOLS = [%w[- r], %w[- w]].freeze
-  EXE_MODE_SYMBOLS = { owner: %w[- x S s], other: %w[- x S s] }.freeze
+  EXE_MODE_SYMBOLS = { owner: %w[- x S s], other: %w[- x T t] }.freeze
 
   attr_reader :name
 
