@@ -9,7 +9,7 @@ class LongFormat
     text = ''
     text += "total #{sum_blocks(@items)}\n"
     table = create_table(@items)
-    text += table.map { |row| row.join(' ') }.join("\n")
+    text + table.map { |row| row.join(' ') }.join("\n")
   end
 
   private

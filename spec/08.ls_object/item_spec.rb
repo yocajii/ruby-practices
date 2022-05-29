@@ -47,7 +47,7 @@ RSpec.describe Item do
 
   describe '#mtime' do
     example '最終更新時刻を返す' do
-      expect(@item.mtime.to_i).to eq Time.local(2022, 5, 22, 14, 48, 47, 376666.732).to_i
+      expect(@item.mtime.to_i).to eq Time.local(2022, 5, 22, 14, 48, 47, 376_666.732).to_i
     end
   end
 end

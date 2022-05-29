@@ -57,7 +57,7 @@ RSpec.describe Ls do
     example 'lオプションありでアイテム数0の時はtotalのみ返す' do
       ls = Ls.new("#{__dir__}/sample/123", { a: false, l: true, r: false })
       expect(ls.show).to eq <<~TEXT
-      total 0
+        total 0
       TEXT
     end
   end

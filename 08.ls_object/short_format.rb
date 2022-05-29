@@ -9,11 +9,11 @@ class ShortFormat
   end
 
   def create_text
-    if @items.size.positive?
-      rows = (@items.size.to_f / COLS).ceil
-      table = create_table(rows)
-      table.map { |row| row.join.strip }.join("\n")
-    end
+    return if @items.size.zero?
+
+    rows = (@items.size.to_f / COLS).ceil
+    table = create_table(rows)
+    table.map { |row| row.join.strip }.join("\n")
   end
 
   private
