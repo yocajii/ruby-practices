@@ -6,8 +6,7 @@ require_relative '../../08.ls_object/item'
 
 RSpec.describe Item do
   before do
-    Dir.chdir "#{__dir__}/sample"
-    @item = Item.new('123')
+    @item = Item.new('123', "#{__dir__}/sample/123")
   end
 
   describe '#blocks' do
@@ -48,18 +47,7 @@ RSpec.describe Item do
 
   describe '#mtime' do
     example '最終更新時刻を返す' do
-      expect(@item.mtime).to eq 'May 22 14:48'
-    end
-  end
-
-  describe '#long_name' do
-    example 'シンボリックリンク以外の時' do
-      expect(@item.long_name).to eq '123'
-    end
-
-    example 'シンボリックリンクの時' do
-      slink = Item.new('slink')
-      expect(slink.long_name).to eq 'slink -> 123.txt'
+      expect(@item.mtime.to_i).to eq Time.local(2022, 5, 22, 14, 48, 47, 376666.732).to_i
     end
   end
 end

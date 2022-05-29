@@ -6,7 +6,7 @@ require_relative '../../08.ls_object/ls'
 
 RSpec.describe Ls do
   describe '#show' do
-    example 'オプションなしの時' do
+    example 'オプションなしの時はshort形式で返す' do
       ls = Ls.new("#{__dir__}/sample", { a: false, l: false, r: false })
       expect(ls.show).to eq <<~TEXT.chomp
         123      sample.txt  サンプル
@@ -25,6 +25,15 @@ RSpec.describe Ls do
       TEXT
     end
 
+    example 'rオプションありの時はファイル名の降順でソートする' do
+      ls = Ls.new("#{__dir__}/sample", { a: false, l: false, r: true })
+      expect(ls.show).to eq <<~TEXT.chomp
+        サンプル.txt  sbit        123.txt
+        サンプル      sample.txt  123
+        slink         sample
+      TEXT
+    end
+
     example 'lオプションありの時はlong形式で返す' do
       ls = Ls.new("#{__dir__}/sample", { a: false, l: true, r: false })
       expect(ls.show).to eq <<~TEXT.chomp
@@ -40,12 +49,15 @@ RSpec.describe Ls do
       TEXT
     end
 
-    example 'rオプションありの時はファイル名の降順でソートする' do
-      ls = Ls.new("#{__dir__}/sample", { a: false, l: false, r: true })
-      expect(ls.show).to eq <<~TEXT.chomp
-        サンプル.txt  sbit        123.txt
-        サンプル      sample.txt  123
-        slink         sample
+    example 'オプションなしでアイテム数0の時は何も出力しない' do
+      ls = Ls.new("#{__dir__}/sample/123", { a: false, l: false, r: false })
+      expect(ls.show).to eq nil
+    end
+
+    example 'lオプションありでアイテム数0の時はtotalのみ返す' do
+      ls = Ls.new("#{__dir__}/sample/123", { a: false, l: true, r: false })
+      expect(ls.show).to eq <<~TEXT
+      total 0
       TEXT
     end
   end
