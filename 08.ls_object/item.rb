@@ -20,11 +20,12 @@ class Item
   MODE_SYMBOLS = [%w[- r], %w[- w]].freeze
   EXE_MODE_SYMBOLS = { owner: %w[- x S s], other: %w[- x T t] }.freeze
 
-  attr_reader :name
+  attr_reader :name, :path
 
-  def initialize(name)
+  def initialize(name, path)
     @name = name
-    @lstat = File.lstat @name
+    @path = path
+    @lstat = File.lstat(path)
   end
 
   def blocks
@@ -54,11 +55,7 @@ class Item
   end
 
   def mtime
-    parse_mtime(@lstat.mtime)
-  end
-
-  def long_name
-    add_symlink
+    @lstat.mtime
   end
 
   private
@@ -85,18 +82,5 @@ class Item
     shifted_special_digits = special_bits.map { |b| b << 1 }
     merged_digits = [execute_bits, shifted_special_digits].transpose.map { |d| d.inject(:+) }
     merged_digits.map.with_index { |d, i| symbols[i][d] }
-  end
-
-  def parse_mtime(mtime)
-    border = Date.today.prev_month(6).to_time
-    if mtime > border
-      mtime.strftime('%b %e %H:%M')
-    else
-      mtime.strftime('%b %e  %Y')
-    end
-  end
-
-  def add_symlink
-    File.symlink?(@name) ? "#{@name} -> #{File.readlink(@name)}" : @name
   end
 end

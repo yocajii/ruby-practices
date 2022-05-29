@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'pathname'
 require_relative 'item'
 require_relative 'short_format'
 require_relative 'long_format'
@@ -9,16 +10,14 @@ class Ls
   def initialize(target, options)
     @target = target
     @options = options
-    @items = fetch_items
   end
 
   def show
+    items = fetch_items
     if @options[:l]
-      LongFormat.new(@items).text
+      LongFormat.new(items).create_text
     else
-      return if @items.size.zero?
-
-      ShortFormat.new(@items).text
+      ShortFormat.new(items).create_text
     end
   end
 
@@ -29,33 +28,37 @@ class Ls
       if File.file? @target
         [@target]
       else
-        @names = bulk_names
-        trim_names unless @options[:a]
-        reverse_names if @options[:r]
-        @names
+        names = sort_all_items(@target)
+        names = delete_hidden_items(names) unless @options[:a]
+        names = names.reverse if @options[:r]
+        names
       end
-    item_names.map { |name| Item.new(name) }
+    item_names.map do |item_name|
+      item_path = Pathname(@target).join(item_name)
+      Item.new(item_name, item_path)
+    end
   end
 
-  def bulk_names
-    Dir.chdir(@target)
-    Dir.entries('.').sort_by { |v| v.match('^[.]?(.*$)')[1] }
+  def sort_all_items(target)
+    Dir.entries(target).sort_by { |name| name.delete_prefix('.') }
   end
 
-  def trim_names
-    @names.delete_if { |name| name.start_with?('.') }
-  end
-
-  def reverse_names
-    @names.reverse!
+  def delete_hidden_items(names)
+    names.delete_if { |name| name.start_with?('.') }
   end
 end
 
-options = {}
-opt = OptionParser.new
-opt.on('-a') { |v| options[:a] = v }
-opt.on('-l') { |v| options[:l] = v }
-opt.on('-r') { |v| options[:r] = v }
-target = opt.parse(ARGV)[0] || '.'
+def main
+  options = {}
+  opt = OptionParser.new
+  opt.on('-a') { |v| options[:a] = v }
+  opt.on('-l') { |v| options[:l] = v }
+  opt.on('-r') { |v| options[:r] = v }
+  target = opt.parse(ARGV)[0] || '.'
 
-puts Ls.new(target, options).show
+  puts Ls.new(target, options).show
+end
+
+if __FILE__ == $PROGRAM_NAME
+  main
+end

@@ -5,29 +5,41 @@ class LongFormat
     @items = items
   end
 
-  def text
+  def create_text
     text = ''
-    text += "total #{sum_blocks}\n"
-    if @items.size.positive?
-      table = create_table
-      text += table.map { |row| row.join(' ') }.join("\n")
-    end
-    text
+    text += "total #{sum_blocks(@items)}\n"
+    table = create_table(@items)
+    text += table.map { |row| row.join(' ') }.join("\n")
   end
 
   private
 
-  def sum_blocks
-    @items.map(&:blocks).sum
+  def sum_blocks(items)
+    items.map(&:blocks).sum
   end
 
-  def create_table
-    stats = @items.map { |item| [item.ftype_mode, item.nlink, item.user, item.group, item.size, item.mtime, item.long_name] }
-    columns = stats.transpose
-    aligned_columns = columns[0...-1].map do |column| # 最終列は整列不要でマルチバイト文字の場合もあるため外す
-      width = column.map { |v| v.is_a?(Integer) ? v.to_s.size : v.size }.max
-      column.map { |v| v.is_a?(Integer) ? v.to_s.rjust(width) : v.ljust(width) }
+  def create_table(items)
+    stats = items.map do |item|
+      [item.ftype_mode, item.nlink, item.user, item.group, item.size, format_mtime(item.mtime), format_name(item.name, item.path)]
     end
-    aligned_columns.concat([columns.last]).transpose || []
+    columns = stats.transpose
+    aligned_columns_without_last = columns[0...-1].map do |column_values| # 最終列(ファイル/ディレクトリ名)は整列不要でマルチバイト文字の場合もあるため外す
+      width = column_values.map { |value| value.is_a?(Integer) ? value.to_s.size : value.size }.max
+      column_values.map { |value| value.is_a?(Integer) ? value.to_s.rjust(width) : value.ljust(width) }
+    end
+    aligned_columns_without_last.concat([columns.last]).compact.transpose
+  end
+
+  def format_mtime(mtime)
+    border = Date.today.prev_month(6).to_time
+    if mtime > border
+      mtime.strftime('%b %e %H:%M')
+    else
+      mtime.strftime('%b %e  %Y')
+    end
+  end
+
+  def format_name(name, path)
+    File.symlink?(path) ? "#{name} -> #{File.readlink(path)}" : name
   end
 end

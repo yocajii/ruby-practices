@@ -8,10 +8,12 @@ class ShortFormat
     @items = items
   end
 
-  def text
-    rows = (@items.size.to_f / COLS).ceil
-    table = create_table(rows)
-    table.map { |row| row.join.strip }.join("\n")
+  def create_text
+    if @items.size.positive?
+      rows = (@items.size.to_f / COLS).ceil
+      table = create_table(rows)
+      table.map { |row| row.join.strip }.join("\n")
+    end
   end
 
   private
