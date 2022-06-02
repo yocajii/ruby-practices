@@ -6,10 +6,10 @@ class LongFormat
   end
 
   def create_text
-    text = ''
-    text += "total #{sum_blocks(@items)}\n"
+    total = "total #{sum_blocks(@items)}"
     table = create_table(@items)
-    text + table.map { |row| row.join(' ') }.join("\n")
+    details = table.map { |row| row.join(' ') }
+    [total, *details].join("\n")
   end
 
   private
