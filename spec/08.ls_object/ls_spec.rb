@@ -7,7 +7,7 @@ require_relative '../../08.ls_object/ls'
 RSpec.describe Ls do
   describe '#show' do
     example 'オプションなしの時はshort形式で返す' do
-      ls = Ls.new("#{__dir__}/sample", { a: false, l: false, r: false })
+      ls = Ls.new(File.expand_path('../sample', __FILE__), { a: false, l: false, r: false })
       expect(ls.show).to eq <<~TEXT.chomp
         123      sample.txt  サンプル
         123.txt  sbit        サンプル.txt
@@ -16,7 +16,7 @@ RSpec.describe Ls do
     end
 
     example 'aオプションありの時は隠しファイルも返す' do
-      ls = Ls.new("#{__dir__}/sample", { a: true, l: false, r: false })
+      ls = Ls.new(File.expand_path('../sample', __FILE__), { a: true, l: false, r: false })
       expect(ls.show).to eq <<~TEXT.chomp
         .        .hidden      sbit
         ..       .hidden.txt  slink
@@ -26,7 +26,7 @@ RSpec.describe Ls do
     end
 
     example 'rオプションありの時はファイル名の降順でソートする' do
-      ls = Ls.new("#{__dir__}/sample", { a: false, l: false, r: true })
+      ls = Ls.new(File.expand_path('../sample', __FILE__), { a: false, l: false, r: true })
       expect(ls.show).to eq <<~TEXT.chomp
         サンプル.txt  sbit        123.txt
         サンプル      sample.txt  123
@@ -35,7 +35,7 @@ RSpec.describe Ls do
     end
 
     example 'lオプションありの時はlong形式で返す' do
-      ls = Ls.new("#{__dir__}/sample", { a: false, l: true, r: false })
+      ls = Ls.new(File.expand_path('../sample', __FILE__), { a: false, l: true, r: false })
       expect(ls.show).to eq <<~TEXT.chomp
         total 12
         drwxr-xr-x 2 yocajii yocajii 4096 May 22 14:48 123
@@ -50,12 +50,12 @@ RSpec.describe Ls do
     end
 
     example 'オプションなしでアイテム数0の時は何も出力しない' do
-      ls = Ls.new("#{__dir__}/sample/123", { a: false, l: false, r: false })
+      ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: false, r: false })
       expect(ls.show).to eq nil
     end
 
     example 'lオプションありでアイテム数0の時はtotalのみ返す' do
-      ls = Ls.new("#{__dir__}/sample/123", { a: false, l: true, r: false })
+      ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: true, r: false })
       expect(ls.show).to eq <<~TEXT
         total 0
       TEXT

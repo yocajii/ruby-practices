@@ -6,7 +6,7 @@ require_relative '../../08.ls_object/item'
 
 RSpec.describe Item do
   before do
-    @item = Item.new('123', "#{__dir__}/sample/123")
+    @item = Item.new('123', File.expand_path('../sample/123', __FILE__))
   end
 
   describe '#blocks' do
