@@ -25,9 +25,9 @@ class ShortFormat
   end
 
   def align_table(table)
-    table.map do |column|
-      width = column.map { |item_name| digit_size(item_name) }.max + SPAN
-      column.map { |item_name| digit_ljust(width, item_name) }
+    table.map do |row|
+      width = row.map { |item_name| digit_size(item_name) }.max + SPAN
+      row.map { |item_name| digit_ljust(width, item_name) }
     end
   end
 
