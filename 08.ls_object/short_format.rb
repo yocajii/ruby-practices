@@ -9,23 +9,19 @@ class ShortFormat
   end
 
   def create_text
-    return if @items.size.zero?
+    return if @items.empty?
 
-    rows = (@items.size.to_f / COLS).ceil
-    table = create_table(rows)
+    row_size = (@items.size.to_f / COLS).ceil
+    table = create_table(row_size)
     table.map { |row| row.join.strip }.join("\n")
   end
 
   private
 
-  def create_table(rows)
-    horizontal_table = slice_items(rows)
+  def create_table(row_size)
+    horizontal_table = @items.map(&:name).each_slice(row_size).to_a
     aligned_horizontal_table = align_table(horizontal_table)
-    aligned_horizontal_table.map { |item| item.values_at(0...rows) }.transpose
-  end
-
-  def slice_items(rows)
-    @items.map(&:name).each_slice(rows).to_a
+    aligned_horizontal_table.map { |item| item.values_at(0...row_size) }.transpose
   end
 
   def align_table(table)
