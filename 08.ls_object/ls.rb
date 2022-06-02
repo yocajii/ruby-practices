@@ -24,7 +24,7 @@ class Ls
   end
 
   def show
-    items = fetch_items
+    items = create_items
     if @options[:l]
       LongFormat.new(items).create_text
     else
@@ -34,15 +34,15 @@ class Ls
 
   private
 
-  def fetch_items
+  def create_items
     item_names =
       if File.file? @target
         [@target]
       else
-        names = sort_all_items(@target)
-        names = delete_hidden_items(names) unless @options[:a]
-        names = names.reverse if @options[:r]
-        names
+        names = fetch_item_names(@target)
+        trimmed_names = @options[:a] ? names : delete_hidden_item_names(names)
+        sorted_names = @options[:r] ? trimmed_names.reverse : trimmed_names
+        sorted_names
       end
     item_names.map do |item_name|
       item_path = Pathname(@target).join(item_name)
@@ -50,12 +50,12 @@ class Ls
     end
   end
 
-  def sort_all_items(target)
+  def fetch_item_names(target)
     Dir.entries(target).sort_by { |name| name.delete_prefix('.') }
   end
 
-  def delete_hidden_items(names)
-    names.delete_if { |name| name.start_with?('.') }
+  def delete_hidden_item_names(names)
+    names.reject { |name| name.start_with?('.') }
   end
 end
 
