@@ -7,6 +7,17 @@ require_relative 'short_format'
 require_relative 'long_format'
 
 class Ls
+  def self.main
+    options = {}
+    opt = OptionParser.new
+    opt.on('-a') { |v| options[:a] = v }
+    opt.on('-l') { |v| options[:l] = v }
+    opt.on('-r') { |v| options[:r] = v }
+    target = opt.parse(ARGV)[0] || '.'
+
+    puts Ls.new(target, options).show
+  end
+
   def initialize(target, options)
     @target = target
     @options = options
@@ -48,15 +59,4 @@ class Ls
   end
 end
 
-def main
-  options = {}
-  opt = OptionParser.new
-  opt.on('-a') { |v| options[:a] = v }
-  opt.on('-l') { |v| options[:l] = v }
-  opt.on('-r') { |v| options[:r] = v }
-  target = opt.parse(ARGV)[0] || '.'
-
-  puts Ls.new(target, options).show
-end
-
-main if __FILE__ == $PROGRAM_NAME
+Ls.main if __FILE__ == $PROGRAM_NAME
