@@ -24,7 +24,7 @@ class LongFormat
     end
     columns = stats.transpose
     aligned_columns_without_last = columns[0...-1].map do |column_values| # 最終列(ファイル/ディレクトリ名)は整列不要でマルチバイト文字の場合もあるため外す
-      width = column_values.map { |value| value.is_a?(Integer) ? value.to_s.size : value.size }.max
+      width = column_values.map { |value| value.to_s.size }.max
       column_values.map { |value| value.is_a?(Integer) ? value.to_s.rjust(width) : value.ljust(width) }
     end
     aligned_columns_without_last.concat([columns.last]).compact.transpose
