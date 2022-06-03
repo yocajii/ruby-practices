@@ -54,14 +54,16 @@ RSpec.describe Ls do
       TEXT
     end
 
-    example 'オプションなしでアイテム数0の時は何も出力しない' do
-      ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: false, r: false })
-      expect(ls.show).to eq nil
-    end
+    context 'アイテム数0の時' do
+      example 'オプションなしでアイテム数0の時は何も出力しない' do
+        ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: false, r: false })
+        expect(ls.show).to eq nil
+      end
 
-    example 'lオプションありでアイテム数0の時はtotalのみ返す' do
-      ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: true, r: false })
-      expect(ls.show).to eq 'total 0'
+      example 'lオプションありでアイテム数0の時はtotalのみ返す' do
+        ls = Ls.new(File.expand_path('../sample/123', __FILE__), { a: false, l: true, r: false })
+        expect(ls.show).to eq 'total 0'
+      end
     end
 
     context 'lオプションの最終更新日時' do
@@ -78,6 +80,16 @@ RSpec.describe Ls do
         expect(ls.show).to eq <<~TEXT.chomp
           total 0
           -rw-r--r-- 1 yocajii yocajii 0 Jun  2 18:14 new.txt
+        TEXT
+      end
+    end
+
+    context 'lオプション有りで名前なし引数がファイルの時' do
+      example 'ファイルの情報を返す' do
+        ls = Ls.new(File.expand_path('../sample/123.txt', __FILE__), { a: false, l: true, r: false })
+        expect(ls.show).to eq <<~TEXT.chomp
+          total 0
+          -rw-r--r-- 1 yocajii yocajii 0 May 22 09:37 /home/yocajii/ruby-practices/spec/08.ls_object/sample/123.txt
         TEXT
       end
     end
