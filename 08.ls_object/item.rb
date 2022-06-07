@@ -22,8 +22,8 @@ class Item
 
   attr_reader :name, :path
 
-  def initialize(name, path)
-    @name = name
+  def initialize(path)
+    @name = File.basename(path)
     @path = path
     @lstat = File.lstat(path)
   end

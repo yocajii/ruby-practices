@@ -89,7 +89,7 @@ RSpec.describe Ls do
         ls = Ls.new(File.expand_path('../sample/123.txt', __FILE__), { a: false, l: true, r: false })
         expect(ls.show).to eq <<~TEXT.chomp
           total 0
-          -rw-r--r-- 1 yocajii yocajii 0 May 22 09:37 /home/yocajii/ruby-practices/spec/08.ls_object/sample/123.txt
+          -rw-r--r-- 1 yocajii yocajii 0 May 22 09:37 123.txt
         TEXT
       end
     end

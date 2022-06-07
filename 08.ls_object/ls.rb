@@ -35,18 +35,17 @@ class Ls
   private
 
   def create_items
-    item_names =
+    item_paths =
       if File.file? @target
         [@target]
       else
         names = fetch_item_names(@target)
         trimmed_names = @options[:a] ? names : delete_hidden_item_names(names)
         sorted_names = @options[:r] ? trimmed_names.reverse : trimmed_names
-        sorted_names
+        sorted_names.map { |name| File.join(@target, name) }
       end
-    item_names.map do |item_name|
-      item_path = Pathname(@target).join(item_name)
-      Item.new(item_name, item_path)
+    item_paths.map do |item_path|
+      Item.new(item_path)
     end
   end
 
