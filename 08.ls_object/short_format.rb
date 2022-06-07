@@ -19,24 +19,20 @@ class ShortFormat
   private
 
   def create_table(row_size)
-    horizontal_table = @items.map(&:name).each_slice(row_size).to_a
+    horizontal_table = @items.each_slice(row_size)
     aligned_horizontal_table = align_table(horizontal_table)
     aligned_horizontal_table.map { |item| item.values_at(0...row_size) }.transpose
   end
 
   def align_table(table)
     table.map do |row|
-      width = row.map { |item_name| digit_size(item_name) }.max + SPAN
-      row.map { |item_name| digit_ljust(width, item_name) }
+      width = row.map { |item| item.digit_size }.max + SPAN
+      row.map { |item| digit_ljust(width, item) }
     end
   end
 
-  def digit_size(text)
-    text.each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.inject(:+)
-  end
-
-  def digit_ljust(width, text)
-    padding = ' ' * (width - digit_size(text))
-    text + padding
+  def digit_ljust(width, item)
+    padding = ' ' * (width - item.digit_size)
+    item.name + padding
   end
 end

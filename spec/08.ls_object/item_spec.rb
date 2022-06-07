@@ -50,6 +50,13 @@ RSpec.describe Item do
       expect(@item.mtime).to eq Time.local(2022, 6, 2, 12, 00)
     end
   end
+
+  describe '#digit_size' do
+    example 'ファイル名の文字数を半角に換算して返す' do
+      item = Item.new(File.expand_path('../sample/サンプル.txt', __FILE__))
+      expect(item.digit_size).to eq 12
+    end
+  end
 end
 
 # rubocop:enable Metrics/BlockLength

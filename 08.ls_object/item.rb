@@ -58,6 +58,10 @@ class Item
     @lstat.mtime
   end
 
+  def digit_size
+    @name.each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.inject(:+)
+  end
+
   private
 
   def parse_ftype(ftype)
