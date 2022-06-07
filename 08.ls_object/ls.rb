@@ -15,7 +15,7 @@ class Ls
     opt.on('-r') { |v| options[:r] = v }
     target = opt.parse(ARGV)[0] || '.'
 
-    puts Ls.new(target, options).show
+    puts new(target, options).show
   end
 
   def initialize(target, options)
