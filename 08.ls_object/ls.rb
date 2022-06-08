@@ -50,7 +50,7 @@ class Ls
   end
 
   def fetch_item_names(target)
-    Dir.entries(target).sort_by { |name| name.delete_prefix('.') }
+    Dir.entries(target).sort_by { |name| name.delete_prefix('.').downcase }
   end
 
   def delete_hidden_item_names(names)
