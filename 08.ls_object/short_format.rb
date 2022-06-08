@@ -26,7 +26,7 @@ class ShortFormat
 
   def align_table(table)
     table.map do |row|
-      width = row.map { |item| item.digit_size }.max + SPAN
+      width = row.map(&:digit_size).max + SPAN
       row.map { |item| digit_ljust(width, item) }
     end
   end
