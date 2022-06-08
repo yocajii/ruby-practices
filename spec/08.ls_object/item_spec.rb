@@ -9,6 +9,12 @@ RSpec.describe Item do
     @item = Item.new(File.expand_path('../sample/123', __FILE__))
   end
 
+  describe '#name' do
+    example 'ファイル/ディレクトリ名を返す' do
+      expect(@item.name).to eq '123'
+    end
+  end
+
   describe '#blocks' do
     example 'ブロック数を返す' do
       expect(@item.blocks).to eq 4

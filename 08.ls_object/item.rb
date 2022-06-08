@@ -20,12 +20,15 @@ class Item
   MODE_SYMBOLS = [%w[- r], %w[- w]].freeze
   EXE_MODE_SYMBOLS = { owner: %w[- x S s], other: %w[- x T t] }.freeze
 
-  attr_reader :name, :path
+  attr_reader :path
 
   def initialize(path)
-    @name = File.basename(path)
     @path = path
     @lstat = File.lstat(path)
+  end
+
+  def name
+    File.basename(@path)
   end
 
   def blocks
@@ -59,7 +62,7 @@ class Item
   end
 
   def digit_size
-    @name.each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.inject(:+)
+    name.each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.inject(:+)
   end
 
   private
