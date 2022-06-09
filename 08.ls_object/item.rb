@@ -38,7 +38,7 @@ class Item
   def ftype_mode
     ftype = @lstat.ftype
     mode_bits = @lstat.mode.to_s(2).match(/.{#{MODE_BITS_LENGTH}}$/).to_s
-    parse_ftype(ftype) + parse_mode(mode_bits)
+    TYPES[ftype] + parse_mode(mode_bits)
   end
 
   def nlink
@@ -66,10 +66,6 @@ class Item
   end
 
   private
-
-  def parse_ftype(ftype)
-    TYPES[ftype]
-  end
 
   def parse_mode(mode_bits)
     mode_bits_array = mode_bits.chars.map(&:to_i)
