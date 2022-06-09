@@ -7,7 +7,7 @@ class LongFormat
 
   def create_text
     total = "total #{sum_blocks(@items)}"
-    table = create_table(@items)
+    table = @items.empty? ? [] : create_table(@items)
     details = table.map { |row| row.join(' ') }
     [total, *details].join("\n")
   end
@@ -27,7 +27,7 @@ class LongFormat
       width = column_values.map { |value| value.to_s.size }.max
       column_values.map { |value| value.is_a?(Integer) ? value.to_s.rjust(width) : value.ljust(width) }
     end
-    aligned_columns_without_last.concat([columns.last]).compact.transpose
+    aligned_columns_without_last.concat([columns.last]).transpose
   end
 
   def format_mtime(mtime)
