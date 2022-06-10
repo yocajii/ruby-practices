@@ -19,19 +19,17 @@ class LongFormat
   end
 
   def create_table(items)
-    if items.empty?
-      []
-    else
-      stats = items.map do |item|
-        [item.ftype_mode, item.nlink, item.user, item.group, item.size, format_mtime(item.mtime), format_name(item.name, item.path)]
-      end
-      columns = stats.transpose
-      aligned_columns_without_last = columns[0...-1].map do |column_values| # 最終列(ファイル/ディレクトリ名)は整列不要でマルチバイト文字の場合もあるため外す
-        width = column_values.map { |value| value.to_s.size }.max
-        column_values.map { |value| value.is_a?(Integer) ? value.to_s.rjust(width) : value.ljust(width) }
-      end
-      aligned_columns_without_last.concat([columns.last]).transpose
+    return [] if items.empty?
+
+    stats = items.map do |item|
+      [item.ftype_mode, item.nlink, item.user, item.group, item.size, format_mtime(item.mtime), format_name(item.name, item.path)]
     end
+    columns = stats.transpose
+    aligned_columns_without_last = columns[0...-1].map do |column_values| # 最終列(ファイル/ディレクトリ名)は整列不要でマルチバイト文字の場合もあるため外す
+      width = column_values.map { |value| value.to_s.size }.max
+      column_values.map { |value| value.is_a?(Integer) ? value.to_s.rjust(width) : value.ljust(width) }
+    end
+    aligned_columns_without_last.concat([columns.last]).transpose
   end
 
   def format_mtime(mtime)
